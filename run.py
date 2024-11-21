@@ -8,8 +8,8 @@ from operations import StockOperations
 
 if __name__ == "__main__":
     # Replace with your actual API keys
-    marketstack_key = "904c5a774b7856475c7159d50ddc972b"
-    polygon_key = "ernOzepzqAEFJdCq1gGfkgBAkkSpo1Kw"
+    marketstack_key = "664f2cfe477fecfb277c3f867fb9d887"
+    polygon_key = "Fz1d2Tintn4Yjl4JVDLpqosrOodSBiph"
 
     # Initialize API handler
     stock_api = StockApi(marketstack_key, polygon_key)

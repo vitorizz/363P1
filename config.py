@@ -8,5 +8,5 @@ DATABASES = {
     'USER': os.getenv('DATABASE_USER', 'postgres'),
     'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
     'NAME': os.getenv('DATABASE_NAME', 'stocks'),
-    'PORT': int(os.getenv('DATABASE_PORT', 5432))
+    'PORT': 5432
 }
