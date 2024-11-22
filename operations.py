@@ -1,5 +1,5 @@
 from peewee import IntegrityError
-from models import Company, StockPrice, AdjustedStockPrice, MarketNews
+from models import Company, StockPrice, AdjustedStockPrice, MarketNews, CompanyFinancials
 from datetime import datetime, timezone
 class StockOperations:
     def create_company(self, company_data):
@@ -21,6 +21,70 @@ class StockOperations:
             print(f"Company {ticker_symbol} created or updated successfully.")
         except IntegrityError as e:
             print(f"Error creating/updating company {ticker_symbol}: {e}")
+
+    def create_financial_data(self, ticker, financial_data):
+        """Insert financial data records."""
+        for record in financial_data.get('results', []):
+            try:
+                company = Company.get_or_none(ticker_symbol=ticker)
+                if company:
+                    # Extract general financial data
+                    start_date = record.get('start_date')
+                    end_date = record.get('end_date')
+                    filing_date = record.get('filing_date')
+                    acceptance_datetime = record.get('acceptance_datetime')
+                    timeframe = record.get('timeframe')
+                    fiscal_period = record.get('fiscal_period')
+                    fiscal_year = record.get('fiscal_year')
+                    cik = record.get('cik')
+                    sic = record.get('sic')
+                    source_filing_url = record.get('source_filing_url')
+                    source_filing_file_url = record.get('source_filing_file_url')
+
+                    # Parse financial details
+                    financials = record.get('financials', {})
+                    balance_sheet = financials.get('balance_sheet', {})
+                    income_statement = financials.get('income_statement', {})
+                    cash_flow_statement = financials.get('cash_flow_statement', {})
+
+                    # Insert data into CompanyFinancials table
+                    CompanyFinancials.create(
+                        company=company,
+                        start_date=start_date,
+                        end_date=end_date,
+                        filing_date=filing_date,
+                        acceptance_datetime=acceptance_datetime,
+                        timeframe=timeframe,
+                        fiscal_period=fiscal_period,
+                        fiscal_year=fiscal_year,
+                        cik=cik,
+                        sic=sic,
+                        source_filing_url=source_filing_url,
+                        source_filing_file_url=source_filing_file_url,
+                        equity=balance_sheet.get('equity', {}).get('value'),
+                        long_term_debt=balance_sheet.get('long_term_debt', {}).get('value'),
+                        current_liabilities=balance_sheet.get('current_liabilities', {}).get('value'),
+                        liabilities=balance_sheet.get('liabilities', {}).get('value'),
+                        accounts_payable=balance_sheet.get('accounts_payable', {}).get('value'),
+                        assets=balance_sheet.get('assets', {}).get('value'),
+                        current_assets=balance_sheet.get('current_assets', {}).get('value'),
+                        inventory=balance_sheet.get('inventory', {}).get('value'),
+                        income_tax_expense=income_statement.get('income_tax_expense_benefit', {}).get('value'),
+                        operating_expenses=income_statement.get('operating_expenses', {}).get('value'),
+                        gross_profit=income_statement.get('gross_profit', {}).get('value'),
+                        operating_income=income_statement.get('operating_income_loss', {}).get('value'),
+                        net_income=income_statement.get('net_income_loss', {}).get('value'),
+                        revenues=income_statement.get('revenues', {}).get('value'),
+                        diluted_eps=income_statement.get('diluted_earnings_per_share', {}).get('value'),
+                        basic_eps=income_statement.get('basic_earnings_per_share', {}).get('value'),
+                        net_cash_flow=cash_flow_statement.get('net_cash_flow', {}).get('value'),
+                    )
+                    print(f"Financial data for {ticker} from {start_date} to {end_date} created successfully.")
+            except IntegrityError as e:
+                print(f"Error creating financial data for {ticker}: {e}")
+            except Exception as e:
+                print(f"Unexpected error creating financial data for {ticker}: {e}")
+
 
 
     def create_stock_prices(self, stock_price_data):

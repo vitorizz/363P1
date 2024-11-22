@@ -23,6 +23,39 @@ CREATE TABLE Companies (
     round_lot INT
 );
 
+CREATE TABLE company_financials (
+    financial_id SERIAL PRIMARY KEY,
+    company_id INT NOT NULL REFERENCES companies(company_id) ON DELETE CASCADE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    filing_date DATE NOT NULL,
+    acceptance_datetime TIMESTAMP NOT NULL,
+    timeframe VARCHAR(50) NOT NULL,
+    fiscal_period VARCHAR(10) NOT NULL,
+    fiscal_year INT NOT NULL,
+    cik VARCHAR(20) NOT NULL,
+    sic VARCHAR(10) NOT NULL,
+    source_filing_url TEXT,
+    source_filing_file_url TEXT,
+    equity DECIMAL(20, 2),
+    long_term_debt DECIMAL(20, 2),
+    current_liabilities DECIMAL(20, 2),
+    liabilities DECIMAL(20, 2),
+    accounts_payable DECIMAL(20, 2),
+    assets DECIMAL(20, 2),
+    current_assets DECIMAL(20, 2),
+    inventory DECIMAL(20, 2),
+    income_tax_expense DECIMAL(20, 2),
+    operating_expenses DECIMAL(20, 2),
+    gross_profit DECIMAL(20, 2),
+    operating_income DECIMAL(20, 2),
+    net_income DECIMAL(20, 2),
+    revenues DECIMAL(20, 2),
+    diluted_eps DECIMAL(10, 2),
+    basic_eps DECIMAL(10, 2),
+    net_cash_flow DECIMAL(20, 2)
+);
+
 CREATE TABLE Stock_Prices (
     price_id SERIAL PRIMARY KEY,
     company_id INT NOT NULL REFERENCES Companies(company_id),
