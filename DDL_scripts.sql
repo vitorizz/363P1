@@ -7,7 +7,7 @@ CREATE TABLE Companies (
     company_name name_type NOT NULL,
     description TEXT,
     country VARCHAR(50),
-    marketCap DECIMAL(20, 2),
+    market_cap DECIMAL(20, 2),
 );
 
 CREATE TABLE Stock_Prices (
