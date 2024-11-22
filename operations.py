@@ -32,11 +32,15 @@ class StockOperations:
                 close_price = record.get('close')
                 high_price = record.get('high')
                 low_price = record.get('low')
+                volume = record.get('volume')
+                split_factor = record.get('split_factor')
+                dividend = record.get('dividend')
 
                 adj_open_price = record.get('adj_open')
                 adj_close_price = record.get('adj_close')
                 adj_high_price = record.get('adj_high')
                 adj_low_price = record.get('adj_low')
+                adj_volume = record.get('adj_volume')
 
                 price_date = record.get('date')  # ISO 8601 format
 
@@ -55,7 +59,10 @@ class StockOperations:
                             'open_price': open_price,
                             'close_price': close_price,
                             'high_price': high_price,
-                            'low_price': low_price
+                            'low_price': low_price,
+                            'volume': volume,
+                            'split_factor': split_factor,
+                            'dividend': dividend
                         }
                     )
                     if created:
@@ -69,7 +76,8 @@ class StockOperations:
                                 'adj_open_price': adj_open_price,
                                 'adj_close_price': adj_close_price,
                                 'adj_high_price': adj_high_price,
-                                'adj_low_price': adj_low_price
+                                'adj_low_price': adj_low_price,
+                                'adj_volume': adj_volume
                             }
                         )
                         print(f"Adjusted stock price for {record.get('symbol')} on {price_date} created successfully.")
@@ -85,6 +93,19 @@ class StockOperations:
             if company:
                 company.description = polygon_data.get('results', {}).get('description', company.description)
                 company.market_cap = polygon_data.get('results', {}).get('marketcap', company.market_cap)
+                company.market = polygon_data.get('results', {}).get('market', company.market)
+                company.locale = polygon_data.get('results', {}).get('locale', company.locale)
+                company.primary_exchange = polygon_data.get('results', {}).get('primary_exchange', company.primary_exchange)
+                company.active = polygon_data.get('results', {}).get('active', company.active)
+                company.currency_name = polygon_data.get('results', {}).get('currency_name', company.currency_name)
+                company.phone_number = polygon_data.get('results', {}).get('phone_number', company.phone_number)
+                company.sic_code = polygon_data.get('results', {}).get('sic_code', company.sic_code)
+                company.sic_description = polygon_data.get('results', {}).get('sic_description', company.sic_description)
+                company.total_employees = polygon_data.get('results', {}).get('total_employees', company.total_employees)
+                company.list_date = polygon_data.get('results', {}).get('list_date', company.list_date)
+                company.share_class_shares_outstanding = polygon_data.get('results', {}).get('share_class_shares_outstanding', company.share_class_shares_outstanding)
+                company.weighted_shares_outstanding = polygon_data.get('results', {}).get('weighted_shares_outstanding', company.weighted_shares_outstanding)
+                company.round_lot = polygon_data.get('results', {}).get('round_lot', company.round_lot)
                 company.save()
                 print(f"Company {ticker} updated with additional Polygon.io details.")
         except IntegrityError as e:
@@ -96,18 +117,31 @@ class StockOperations:
             try:
                 company = Company.get_or_none(ticker_symbol=ticker)
                 if company:
-                    news_date = article['published_utc'].split("T")[0]  # Extract date from UTC timestamp
+                    news_date = article['published_utc'].split("T")[0]  
                     MarketNews.get_or_create(
                         company=company,
                         news_date=news_date,
                         defaults={
-                            'headline': article['title'],
-                            'sentiment_score': self._calculate_sentiment(article, ticker)
+                            'headline': article.get('title', ''),
+                            'sentiment_score': self._calculate_sentiment(article, ticker),
+                            'title': article.get('title', ''),
+                            'author': article.get('author', ''),
+                            'article_id': article.get('id', ''),
+                            'publisher_name': article.get('publisher', {}).get('name', ''),
+                            'publisher_homepage_url': article.get('publisher', {}).get('homepage_url', ''),
+                            'publisher_logo_url': article.get('publisher', {}).get('logo_url', ''),
+                            'publisher_favicon_url': article.get('publisher', {}).get('favicon_url', ''),
+                            'article_url': article.get('article_url', ''),
+                            'image_url': article.get('image_url', ''),
+                            'description': article.get('description', ''),
                         }
                     )
                     print(f"Market news for {ticker} on {news_date} created successfully.")
             except IntegrityError as e:
                 print(f"Error creating market news: {e}")
+            except Exception as e:
+                print(f"Unexpected error creating market news: {e}")
+
 
     def _calculate_sentiment(self, article, ticker):
         """Extract sentiment for a specific ticker from the article."""

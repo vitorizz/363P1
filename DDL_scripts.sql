@@ -7,7 +7,20 @@ CREATE TABLE Companies (
     company_name name_type NOT NULL,
     description TEXT,
     country VARCHAR(50),
-    market_cap DECIMAL(20, 2)
+    market_cap DECIMAL(20, 2),
+    market VARCHAR(50),
+    locale VARCHAR(50),
+    primary_exchange VARCHAR(50),
+    active BOOLEAN,
+    currency_name VARCHAR(50),
+    phone_number VARCHAR(15),
+    sic_code VARCHAR(10),
+    sic_description TEXT,
+    total_employees INT,
+    list_date DATE,
+    share_class_shares_outstanding BIGINT,
+    weighted_shares_outstanding BIGINT,
+    round_lot INT
 );
 
 CREATE TABLE Stock_Prices (
@@ -18,6 +31,9 @@ CREATE TABLE Stock_Prices (
     close_price currency,
     high_price DECIMAL(10, 5), 
     low_price DECIMAL(10, 5),
+    volume BIGINT,
+    split_factor DECIMAL(10, 5),
+    dividend currency,
     UNIQUE (company_id, price_date) -- Ensure no duplicate stock prices for the same company and date
 );
 
@@ -27,7 +43,8 @@ CREATE TABLE Adjusted_Stock_Prices (
     adj_open_price currency,
     adj_close_price currency, 
     adj_high_price DECIMAL(10, 5),
-    adj_low_price DECIMAL(10, 5)
+    adj_low_price DECIMAL(10, 5),
+    adj_volume BIGINT
 );
 
 -- Weak Entity
@@ -36,7 +53,17 @@ CREATE TABLE MarketNews (
     news_date DATE NOT NULL,
     headline TEXT,
     sentiment_score DECIMAL(5, 2),
-    PRIMARY KEY (company_id, news_date)
+    title TEXT,
+    author VARCHAR(100),
+    article_id VARCHAR(255) NOT NULL, 
+    publisher_name VARCHAR(255), 
+    publisher_homepage_url TEXT,
+    publisher_logo_url TEXT, 
+    publisher_favicon_url TEXT, 
+    article_url TEXT, 
+    image_url TEXT, 
+    description TEXT,
+    PRIMARY KEY (company_id, news_date, article_id) 
 );
 
 CREATE INDEX idx_ticker_symbol ON Companies(ticker_symbol);

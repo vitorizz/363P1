@@ -8,14 +8,17 @@ from operations import StockOperations
 
 if __name__ == "__main__":
     # Replace with your actual API keys
-    marketstack_key = "664f2cfe477fecfb277c3f867fb9d887"
+    marketstack_key = "8d296ad14d34371a264361aa64253b02"
     polygon_key = "Fz1d2Tintn4Yjl4JVDLpqosrOodSBiph"
 
     # Initialize API handler
     stock_api = StockApi(marketstack_key, polygon_key)
 
     # List of stock tickers to process
-    ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
+    # ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN", 
+    #            "NVDA", "META", "NFLX", "BRK.A", "JNJ", 
+    #            "V", "JPM", "UNH", "WMT", "PG", "DIS", "MA", "HD", "PEP", "BAC"]
+    ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"] 
 
 
     # Date range for fetching historical prices
