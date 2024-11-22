@@ -25,21 +25,20 @@ class StockOperations:
 
     def create_stock_prices(self, stock_price_data):
         """Insert stock price and adjusted stock price data."""
-        for record in stock_price_data.get('data', stock_price_data.get('results', [])):
+        for record in stock_price_data.get('data', []):
             try:
                 # Normalize fields
-                open_price = record.get('open', record.get('o'))
-                close_price = record.get('close', record.get('c'))
+                open_price = record.get('open')
+                close_price = record.get('close')
                 adj_open_price = record.get('adj_open')
                 adj_close_price = record.get('adj_close')
-                price_date = record.get('date', record.get('t'))
-                
-                if isinstance(price_date, str):  # Parse ISO 8601 date string
-                    price_date = datetime.fromisoformat(price_date.split('T')[0]).date()
+                price_date = record.get('date')  # ISO 8601 format
 
-                
+                # Parse ISO 8601 date
+                price_date = datetime.fromisoformat(price_date.split('T')[0]).date()
+
                 # Find associated company
-                company = Company.get_or_none(ticker_symbol=record.get('symbol', record.get('symbols')))
+                company = Company.get_or_none(ticker_symbol=record.get('symbol'))
                 
                 if company:
                     # Create StockPrice entry
@@ -68,6 +67,7 @@ class StockOperations:
                 print(f"Integrity Error creating stock price: {e}")
             except Exception as e:
                 print(f"Error creating stock price: {e}")
+
 
     # def create_stock_prices(self, stock_price_data):
     #     """Insert stock price data."""
