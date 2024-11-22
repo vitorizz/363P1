@@ -7,7 +7,7 @@ CREATE TABLE Companies (
     company_name name_type NOT NULL,
     description TEXT,
     country VARCHAR(50),
-    market_cap DECIMAL(20, 2),
+    market_cap DECIMAL(20, 2)
 );
 
 CREATE TABLE Stock_Prices (
@@ -16,8 +16,8 @@ CREATE TABLE Stock_Prices (
     price_date DATE NOT NULL,
     open_price currency,
     close_price currency,
-    high_price DECIMAL(10,5), 
-    low_price DECIMAL(10,5),
+    high_price DECIMAL(10, 5), 
+    low_price DECIMAL(10, 5),
     UNIQUE (company_id, price_date) -- Ensure no duplicate stock prices for the same company and date
 );
 
@@ -26,8 +26,8 @@ CREATE TABLE Adjusted_Stock_Prices (
     price_id INT PRIMARY KEY REFERENCES Stock_Prices(price_id),
     adj_open_price currency,
     adj_close_price currency, 
-    adj_high_price DECIMAL(10,5),
-    adj_low_price DECIMAL(10,5)
+    adj_high_price DECIMAL(10, 5),
+    adj_low_price DECIMAL(10, 5)
 );
 
 -- Weak Entity
@@ -38,7 +38,6 @@ CREATE TABLE MarketNews (
     sentiment_score DECIMAL(5, 2),
     PRIMARY KEY (company_id, news_date)
 );
-
 
 CREATE INDEX idx_ticker_symbol ON Companies(ticker_symbol);
 CREATE INDEX idx_price_date ON Stock_Prices(price_date);
