@@ -7,13 +7,12 @@ from operations import StockOperations
 # - Polygon.io: https://polygon.io/
 
 if __name__ == "__main__":
-    marketstack_key = "29aaad172bd67bbefb3594346b7e58cb"
+    marketstack_key = "33761353d7d0817f391ba85a79407bb9"
     polygon_key = "Fz1d2Tintn4Yjl4JVDLpqosrOodSBiph"
 
     stock_api = StockApi(marketstack_key, polygon_key)
 
-    # List of stock tickers to process, for now we will keep just one for testing, since its lightweight
-    ticker_list = ["AAPL"] 
+    ticker_list = ["AAPL"]
 
     # Date range for fetching historical prices and financials
     start_date = "2024-10-01"
@@ -45,9 +44,9 @@ if __name__ == "__main__":
         if polygon_splits:
             StockOperations().create_stock_splits(ticker, polygon_splits)
 
-        polygon_ipos = stock_api.get_polygon_ipos(order="asc", limit=10)
-        if polygon_ipos:
-            StockOperations().create_ipos(polygon_ipos)
+        # polygon_ipos = stock_api.get_polygon_ipos(order="asc", limit=10)
+        # if polygon_ipos:
+        #     StockOperations().create_ipos(polygon_ipos)
 
         # Fetch market news from Polygon.io
         polygon_news = stock_api.get_polygon_news(ticker)

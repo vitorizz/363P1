@@ -157,10 +157,6 @@ class StockOperations:
                 pay_date = record.get('pay_date')
                 record_date = record.get('record_date')
 
-                if not (ticker and cash_amount and currency and declaration_date and ex_dividend_date and pay_date and record_date):
-                    print(f"Skipping record due to missing data: {record}")
-                    continue
-
                 company = Company.get_or_none(ticker_symbol=ticker)
                 if not company:
                     print(f"Skipping record due to missing company for ticker: {ticker}")
@@ -192,10 +188,6 @@ class StockOperations:
                 execution_date = record.get('execution_date')
                 split_from = record.get('split_from')
                 split_to = record.get('split_to')
-
-                if not ticker or not execution_date or not split_from or not split_to:
-                    print(f"Skipping record due to missing data: {record}")
-                    continue
 
                 company = Company.get_or_none(ticker_symbol=ticker)
                 if not company:
