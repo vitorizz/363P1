@@ -15,8 +15,7 @@ if __name__ == "__main__":
     stock_api = StockApi(marketstack_key, polygon_key)
 
     # List of stock tickers to process
-    # ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
-    ticker_list = ["AAPL"]
+    ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
 
 
     # Date range for fetching historical prices
