@@ -30,8 +30,14 @@ class StockOperations:
                 # Normalize fields
                 open_price = record.get('open')
                 close_price = record.get('close')
+                high_price = record.get('high')
+                low_price = record.get('low')
+
                 adj_open_price = record.get('adj_open')
                 adj_close_price = record.get('adj_close')
+                adj_high_price = record.get('adj_high')
+                adj_low_price = record.get('adj_low')
+
                 price_date = record.get('date')  # ISO 8601 format
 
                 # Parse ISO 8601 date
@@ -47,7 +53,9 @@ class StockOperations:
                         price_date=price_date,
                         defaults={
                             'open_price': open_price,
-                            'close_price': close_price
+                            'close_price': close_price,
+                            'high_price': high_price,
+                            'low_price': low_price
                         }
                     )
                     if created:
@@ -59,7 +67,9 @@ class StockOperations:
                             price=stock_price,
                             defaults={
                                 'adj_open_price': adj_open_price,
-                                'adj_close_price': adj_close_price
+                                'adj_close_price': adj_close_price,
+                                'adj_high_price': adj_high_price,
+                                'adj_low_price': adj_low_price
                             }
                         )
                         print(f"Adjusted stock price for {record.get('symbol')} on {price_date} created successfully.")
@@ -68,43 +78,13 @@ class StockOperations:
             except Exception as e:
                 print(f"Error creating stock price: {e}")
 
-
-    # def create_stock_prices(self, stock_price_data):
-    #     """Insert stock price data."""
-    #     for record in stock_price_data.get('data', stock_price_data.get('results', [])):
-    #         try:
-    #             # Normalize fields based on the source
-    #             open_price = record.get('open', record.get('o'))
-    #             close_price = record.get('close', record.get('c'))
-    #             price_date = record.get('date', record.get('t'))
-    #             if isinstance(price_date, int):  # Convert Unix timestamp to date
-    #                 print("Raw price_date:", price_date)
-    #                 if price_date > 1e10:  # Adjust for milliseconds if necessary
-    #                     price_date = price_date / 1000
-    #                 price_date = datetime.fromtimestamp(price_date, timezone.utc).date()  # Use timezone-aware conversion
-
-    #             company = Company.get_or_none(ticker_symbol = record.get('symbols', record.get('symbol')))
-    #             if company:
-    #                 StockPrice.get_or_create(
-    #                     company=company,
-    #                     price_date=price_date,
-    #                     defaults={
-    #                         'open_price': open_price,
-    #                         'close_price': close_price
-    #                     }
-    #                 )
-    #                 print(f"Stock price for {record.get('symbols', record.get('symbol'))} on {price_date} created successfully.")
-    #         except IntegrityError as e:
-    #             print(f"Integrity Error creating stock price: {e}")
-    #         except Exception as e:
-    #             print(f"Error creating stock price: {e}")
-
     def update_company_with_polygon_details(self, ticker, polygon_data):
         """Update company details with additional data from Polygon.io."""
         try:
             company = Company.get_or_none(ticker_symbol=ticker)
             if company:
                 company.description = polygon_data.get('results', {}).get('description', company.description)
+                company.market_cap = polygon_data.get('results', {}).get('marketcap', company.market_cap)
                 company.save()
                 print(f"Company {ticker} updated with additional Polygon.io details.")
         except IntegrityError as e:

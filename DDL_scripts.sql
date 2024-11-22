@@ -6,7 +6,8 @@ CREATE TABLE Companies (
     ticker_symbol VARCHAR(10) UNIQUE NOT NULL,
     company_name name_type NOT NULL,
     description TEXT,
-    country VARCHAR(50)
+    country VARCHAR(50),
+    marketCap DECIMAL(20, 2),
 );
 
 CREATE TABLE Stock_Prices (
@@ -24,7 +25,9 @@ CREATE TABLE Stock_Prices (
 CREATE TABLE Adjusted_Stock_Prices (
     price_id INT PRIMARY KEY REFERENCES Stock_Prices(price_id),
     adj_open_price currency,
-    adj_close_price currency
+    adj_close_price currency, 
+    adj_high_price DECIMAL(10,5),
+    adj_low_price DECIMAL(10,5)
 );
 
 -- Weak Entity
