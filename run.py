@@ -39,12 +39,6 @@ if __name__ == "__main__":
         if polygon_details:
             StockOperations().update_company_with_polygon_details(ticker, polygon_details)
 
-        # Fetch historical prices from Polygon.io
-        # We already fetch them from MarketStack, so we can delete this
-        # polygon_prices = stock_api.get_polygon_eod(ticker, start_date, end_date)
-        # if polygon_prices:
-        #     StockOperations().create_stock_prices(polygon_prices)
-
         # Fetch market news from Polygon.io
         polygon_news = stock_api.get_polygon_news(ticker)
         if polygon_news:
