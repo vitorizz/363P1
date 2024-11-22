@@ -15,13 +15,9 @@ if __name__ == "__main__":
     stock_api = StockApi(marketstack_key, polygon_key)
 
     # List of stock tickers to process
-    # ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN", 
-    #            "NVDA", "META", "NFLX", "BRK.A", "JNJ", 
-    #            "V", "JPM", "UNH", "WMT", "PG", "DIS", "MA", "HD", "PEP", "BAC"]
-    ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"] 
+    ticker_list = ["AAPL"] 
 
-
-    # Date range for fetching historical prices
+    # Date range for fetching historical prices and financials
     start_date = "2024-10-01"
     end_date = "2024-11-15"
 
@@ -45,6 +41,15 @@ if __name__ == "__main__":
         polygon_news = stock_api.get_polygon_news(ticker)
         if polygon_news:
             StockOperations().create_market_news(ticker, polygon_news)
+
+        # Fetch financial data from Polygon.io
+        financials = stock_api.get_polygon_financials(
+            ticker=ticker, 
+            filing_date_gte=start_date, 
+            filing_date_lt=end_date
+        )
+        if financials:
+            StockOperations().create_financial_data(ticker, financials)
 
     # Close the database connection
     database.close()

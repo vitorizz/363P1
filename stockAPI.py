@@ -15,6 +15,26 @@ class StockApi:
         else:
             print(f"Error fetching MarketStack data for ticker {ticker}: {response.status_code}")
             return None
+        
+    # Fetch financial data from Polygon.io
+    def get_polygon_financials(self, ticker, filing_date_gte, filing_date_lt, timeframe="annual", limit=5, order="asc"):
+        url = f"https://api.polygon.io/vX/reference/financials"
+        response = requests.get(url, params={
+            'ticker': ticker,
+            'filing_date.gte': filing_date_gte,
+            'filing_date.lt': filing_date_lt,
+            'timeframe': timeframe,
+            'limit': limit,
+            'order': order,
+            'apiKey': self.polygon_key
+        })
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error fetching Polygon financials data for ticker {ticker}: {response.status_code}")
+            return None
+
 
     # Fetch historical stock prices from MarketStack
     def get_marketstack_eod(self, ticker, start_date, end_date):

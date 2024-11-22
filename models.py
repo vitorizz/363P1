@@ -29,6 +29,42 @@ class Company(BaseModel):
     class Meta:
         table_name = 'companies'
 
+class CompanyFinancials(BaseModel):
+    financial_id = AutoField()
+    company = ForeignKeyField(Company, backref='financials', on_delete='CASCADE')
+    start_date = DateField(null=False)
+    end_date = DateField(null=False)
+    filing_date = DateField(null=False)
+    acceptance_datetime = DateTimeField(null=False)
+    timeframe = CharField(max_length=50, null=False)
+    fiscal_period = CharField(max_length=10, null=False)
+    fiscal_year = IntegerField(null=False)
+    cik = CharField(max_length=20, null=False)
+    sic = CharField(max_length=10, null=False)
+    source_filing_url = TextField(null=True)
+    source_filing_file_url = TextField(null=True)
+    equity = DecimalField(max_digits=20, decimal_places=2, null=True)
+    long_term_debt = DecimalField(max_digits=20, decimal_places=2, null=True)
+    current_liabilities = DecimalField(max_digits=20, decimal_places=2, null=True)
+    liabilities = DecimalField(max_digits=20, decimal_places=2, null=True)
+    accounts_payable = DecimalField(max_digits=20, decimal_places=2, null=True)
+    assets = DecimalField(max_digits=20, decimal_places=2, null=True)
+    current_assets = DecimalField(max_digits=20, decimal_places=2, null=True)
+    inventory = DecimalField(max_digits=20, decimal_places=2, null=True)
+    income_tax_expense = DecimalField(max_digits=20, decimal_places=2, null=True)
+    operating_expenses = DecimalField(max_digits=20, decimal_places=2, null=True)
+    gross_profit = DecimalField(max_digits=20, decimal_places=2, null=True)
+    operating_income = DecimalField(max_digits=20, decimal_places=2, null=True)
+    net_income = DecimalField(max_digits=20, decimal_places=2, null=True)
+    revenues = DecimalField(max_digits=20, decimal_places=2, null=True)
+    diluted_eps = DecimalField(max_digits=10, decimal_places=2, null=True)
+    basic_eps = DecimalField(max_digits=10, decimal_places=2, null=True)
+    net_cash_flow = DecimalField(max_digits=20, decimal_places=2, null=True)
+
+    class Meta:
+        table_name = 'company_financials'
+
+
 class StockPrice(BaseModel):
     price_id = AutoField()
     company = ForeignKeyField(Company, backref='stock_prices', on_delete='CASCADE')
