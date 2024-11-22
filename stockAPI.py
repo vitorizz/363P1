@@ -75,10 +75,10 @@ class StockApi:
             return None
 
     # Fetch market news from Polygon.io
-    def get_polygon_news(self, ticker):
+    def get_polygon_news(self, ticker, start_date, end_date):
         url = f"https://api.polygon.io/v2/reference/news"
         response = requests.get(url, params={'ticker': ticker, 'limit':'500', 'published_utc.gte':
-        '2023-01-01', 'published_utc.lte': '2023-12-01','apiKey': self.polygon_key})
+        start_date, 'published_utc.lte': end_date,'apiKey': self.polygon_key})
 
         if response.status_code == 200:
             return response.json()

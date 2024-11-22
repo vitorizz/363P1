@@ -38,7 +38,7 @@ if __name__ == "__main__":
             StockOperations().update_company_with_polygon_details(ticker, polygon_details)
 
         # Fetch market news from Polygon.io
-        polygon_news = stock_api.get_polygon_news(ticker)
+        polygon_news = stock_api.get_polygon_news(ticker, start_date, end_date)
         if polygon_news:
             StockOperations().create_market_news(ticker, polygon_news)
 
