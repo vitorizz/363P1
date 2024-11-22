@@ -15,11 +15,13 @@ if __name__ == "__main__":
     stock_api = StockApi(marketstack_key, polygon_key)
 
     # List of stock tickers to process
-    ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
+    # ticker_list = ["AAPL", "MSFT", "GOOG", "TSLA", "AMZN"]
+    ticker_list = ["AAPL"]
+
 
     # Date range for fetching historical prices
-    start_date = "2023-01-01"
-    end_date = "2023-01-31"
+    start_date = "2024-10-01"
+    end_date = "2024-11-15"
 
     for ticker in ticker_list:
         # Fetch company details from MarketStack
@@ -38,9 +40,10 @@ if __name__ == "__main__":
             StockOperations().update_company_with_polygon_details(ticker, polygon_details)
 
         # Fetch historical prices from Polygon.io
-        polygon_prices = stock_api.get_polygon_eod(ticker, start_date, end_date)
-        if polygon_prices:
-            StockOperations().create_stock_prices(polygon_prices)
+        # We already fetch them from MarketStack, so we can delete this
+        # polygon_prices = stock_api.get_polygon_eod(ticker, start_date, end_date)
+        # if polygon_prices:
+        #     StockOperations().create_stock_prices(polygon_prices)
 
         # Fetch market news from Polygon.io
         polygon_news = stock_api.get_polygon_news(ticker)

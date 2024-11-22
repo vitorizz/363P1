@@ -11,7 +11,7 @@ SELECT
     n.headline,
     n.sentiment_score
 FROM Companies c
-LEFT JOIN StockPrices s ON c.company_id = s.company_id
+LEFT JOIN Stock_Prices s ON c.company_id = s.company_id
 LEFT JOIN MarketNews n ON c.company_id = n.company_id;
 
 -- Restricted View
@@ -23,5 +23,5 @@ SELECT
     n.news_date,
     n.headline
 FROM Companies c
-LEFT JOIN StockPrices s ON c.company_id = s.company_id
+LEFT JOIN Stock_Prices s ON c.company_id = s.company_id
 LEFT JOIN MarketNews n ON c.company_id = n.company_id;

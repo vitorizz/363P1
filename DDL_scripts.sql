@@ -9,7 +9,7 @@ CREATE TABLE Companies (
     country VARCHAR(50)
 );
 
-CREATE TABLE StockPrices (
+CREATE TABLE Stock_Prices (
     price_id SERIAL PRIMARY KEY,
     company_id INT NOT NULL REFERENCES Companies(company_id),
     price_date DATE NOT NULL,
@@ -21,8 +21,8 @@ CREATE TABLE StockPrices (
 );
 
 -- Is a Stock Price
-CREATE TABLE AdjustedStockPrices (
-    price_id INT PRIMARY KEY REFERENCES StockPrices(price_id),
+CREATE TABLE Adjusted_Stock_Prices (
+    price_id INT PRIMARY KEY REFERENCES Stock_Prices(price_id),
     adj_open_price currency,
     adj_close_price currency
 );
@@ -38,7 +38,7 @@ CREATE TABLE MarketNews (
 
 
 CREATE INDEX idx_ticker_symbol ON Companies(ticker_symbol);
-CREATE INDEX idx_price_date ON StockPrices(price_date);
+CREATE INDEX idx_price_date ON Stock_Prices(price_date);
 CREATE INDEX idx_news_date ON MarketNews(news_date);
 CREATE INDEX idx_company_news ON MarketNews(company_id, news_date);
 
@@ -46,7 +46,7 @@ CREATE OR REPLACE FUNCTION prevent_duplicate_stock_prices()
 RETURNS TRIGGER AS $$
 BEGIN
     IF EXISTS (
-        SELECT 1 FROM StockPrices
+        SELECT 1 FROM Stock_Prices
         WHERE company_id = NEW.company_id AND price_date = NEW.price_date
     ) THEN
         RAISE EXCEPTION 'Duplicate stock price for the same company and date is not allowed.';
@@ -56,6 +56,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER prevent_price_duplicates
-BEFORE INSERT ON StockPrices
+BEFORE INSERT ON Stock_Prices
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_stock_prices();

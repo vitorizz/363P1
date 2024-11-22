@@ -24,22 +24,26 @@ class StockOperations:
 
 
     def create_stock_prices(self, stock_price_data):
-        """Insert stock price data."""
+        """Insert stock price and adjusted stock price data."""
         for record in stock_price_data.get('data', stock_price_data.get('results', [])):
             try:
-                # Normalize fields based on the source
+                # Normalize fields
                 open_price = record.get('open', record.get('o'))
                 close_price = record.get('close', record.get('c'))
+                adj_open_price = record.get('adj_open')
+                adj_close_price = record.get('adj_close')
                 price_date = record.get('date', record.get('t'))
-                if isinstance(price_date, int):  # Convert Unix timestamp to date
-                    print("Raw price_date:", price_date)
-                    if price_date > 1e10:  # Adjust for milliseconds if necessary
-                        price_date = price_date / 1000
-                    price_date = datetime.fromtimestamp(price_date, timezone.utc).date()  # Use timezone-aware conversion
+                
+                if isinstance(price_date, str):  # Parse ISO 8601 date string
+                    price_date = datetime.fromisoformat(price_date.split('T')[0]).date()
 
-                company = Company.get_or_none(ticker_symbol = record.get('symbols', record.get('symbol')))
+                
+                # Find associated company
+                company = Company.get_or_none(ticker_symbol=record.get('symbol', record.get('symbols')))
+                
                 if company:
-                    StockPrice.get_or_create(
+                    # Create StockPrice entry
+                    stock_price, created = StockPrice.get_or_create(
                         company=company,
                         price_date=price_date,
                         defaults={
@@ -47,11 +51,53 @@ class StockOperations:
                             'close_price': close_price
                         }
                     )
-                    print(f"Stock price for {record.get('symbols', record.get('symbol'))} on {price_date} created successfully.")
+                    if created:
+                        print(f"Stock price for {record.get('symbol')} on {price_date} created successfully.")
+                    
+                    # Create AdjustedStockPrice entry
+                    if stock_price:
+                        AdjustedStockPrice.get_or_create(
+                            price=stock_price,
+                            defaults={
+                                'adj_open_price': adj_open_price,
+                                'adj_close_price': adj_close_price
+                            }
+                        )
+                        print(f"Adjusted stock price for {record.get('symbol')} on {price_date} created successfully.")
             except IntegrityError as e:
                 print(f"Integrity Error creating stock price: {e}")
             except Exception as e:
                 print(f"Error creating stock price: {e}")
+
+    # def create_stock_prices(self, stock_price_data):
+    #     """Insert stock price data."""
+    #     for record in stock_price_data.get('data', stock_price_data.get('results', [])):
+    #         try:
+    #             # Normalize fields based on the source
+    #             open_price = record.get('open', record.get('o'))
+    #             close_price = record.get('close', record.get('c'))
+    #             price_date = record.get('date', record.get('t'))
+    #             if isinstance(price_date, int):  # Convert Unix timestamp to date
+    #                 print("Raw price_date:", price_date)
+    #                 if price_date > 1e10:  # Adjust for milliseconds if necessary
+    #                     price_date = price_date / 1000
+    #                 price_date = datetime.fromtimestamp(price_date, timezone.utc).date()  # Use timezone-aware conversion
+
+    #             company = Company.get_or_none(ticker_symbol = record.get('symbols', record.get('symbol')))
+    #             if company:
+    #                 StockPrice.get_or_create(
+    #                     company=company,
+    #                     price_date=price_date,
+    #                     defaults={
+    #                         'open_price': open_price,
+    #                         'close_price': close_price
+    #                     }
+    #                 )
+    #                 print(f"Stock price for {record.get('symbols', record.get('symbol'))} on {price_date} created successfully.")
+    #         except IntegrityError as e:
+    #             print(f"Integrity Error creating stock price: {e}")
+    #         except Exception as e:
+    #             print(f"Error creating stock price: {e}")
 
     def update_company_with_polygon_details(self, ticker, polygon_data):
         """Update company details with additional data from Polygon.io."""
