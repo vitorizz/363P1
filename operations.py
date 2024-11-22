@@ -28,7 +28,7 @@ class StockOperations:
             try:
                 company = Company.get_or_none(ticker_symbol=ticker)
                 if company:
-                    # Extract general financial data
+                   
                     start_date = record.get('start_date')
                     end_date = record.get('end_date')
                     filing_date = record.get('filing_date')
@@ -41,13 +41,11 @@ class StockOperations:
                     source_filing_url = record.get('source_filing_url')
                     source_filing_file_url = record.get('source_filing_file_url')
 
-                    # Parse financial details
                     financials = record.get('financials', {})
                     balance_sheet = financials.get('balance_sheet', {})
                     income_statement = financials.get('income_statement', {})
                     cash_flow_statement = financials.get('cash_flow_statement', {})
 
-                    # Insert data into CompanyFinancials table
                     CompanyFinancials.create(
                         company=company,
                         start_date=start_date,
@@ -106,16 +104,13 @@ class StockOperations:
                 adj_low_price = record.get('adj_low')
                 adj_volume = record.get('adj_volume')
 
-                price_date = record.get('date')  # ISO 8601 format
+                price_date = record.get('date')  
 
-                # Parse ISO 8601 date
                 price_date = datetime.fromisoformat(price_date.split('T')[0]).date()
 
-                # Find associated company
                 company = Company.get_or_none(ticker_symbol=record.get('symbol'))
                 
                 if company:
-                    # Create StockPrice entry
                     stock_price, created = StockPrice.get_or_create(
                         company=company,
                         price_date=price_date,
@@ -132,7 +127,6 @@ class StockOperations:
                     if created:
                         print(f"Stock price for {record.get('symbol')} on {price_date} created successfully.")
                     
-                    # Create AdjustedStockPrice entry
                     if stock_price:
                         AdjustedStockPrice.get_or_create(
                             price=stock_price,

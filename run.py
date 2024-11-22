@@ -7,14 +7,12 @@ from operations import StockOperations
 # - Polygon.io: https://polygon.io/
 
 if __name__ == "__main__":
-    # Replace with your actual API keys
     marketstack_key = "29aaad172bd67bbefb3594346b7e58cb"
     polygon_key = "Fz1d2Tintn4Yjl4JVDLpqosrOodSBiph"
 
-    # Initialize API handler
     stock_api = StockApi(marketstack_key, polygon_key)
 
-    # List of stock tickers to process
+    # List of stock tickers to process, for now we will keep just one for testing, since its lightweight
     ticker_list = ["AAPL"] 
 
     # Date range for fetching historical prices and financials
@@ -65,5 +63,4 @@ if __name__ == "__main__":
         if financials:
             StockOperations().create_financial_data(ticker, financials)
 
-    # Close the database connection
     database.close()

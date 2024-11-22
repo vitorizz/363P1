@@ -35,7 +35,7 @@ class StockApi:
             print(f"Error fetching Polygon financials data for ticker {ticker}: {response.status_code}")
             return None
         
-        # Fetch historical dividends from Polygon.io
+    # Fetch historical dividends from Polygon.io
     def get_polygon_dividends(self, ticker, order="asc", limit=10):
         url = "https://api.polygon.io/v3/reference/dividends"
         response = requests.get(url, params={

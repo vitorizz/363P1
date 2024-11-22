@@ -1,5 +1,5 @@
 from peewee import *
-from database import database  # Assuming database connection is defined in a separate module
+from database import database 
 
 class BaseModel(Model):
     class Meta:
@@ -80,7 +80,7 @@ class StockPrice(BaseModel):
     class Meta:
         table_name = 'stock_price'
         indexes = (
-            (('company', 'price_date'), True),  # Unique constraint on (company, price_date)
+            (('company', 'price_date'), True),  
         )
 
 class AdjustedStockPrice(BaseModel):
@@ -149,7 +149,7 @@ class MarketNews(BaseModel):
     sentiment_score = DecimalField(max_digits=5, decimal_places=2, null=True)
     title = TextField(null=True)
     author = CharField(max_length=100, null=True)
-    article_id = CharField(max_length=255, unique=True, null=False)  # Unique identifier for the article
+    article_id = CharField(max_length=255, unique=True, null=False)  
     publisher_name = CharField(max_length=255, null=True)
     publisher_homepage_url = TextField(null=True)
     publisher_logo_url = TextField(null=True)
