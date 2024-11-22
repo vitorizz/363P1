@@ -34,7 +34,40 @@ class StockApi:
         else:
             print(f"Error fetching Polygon financials data for ticker {ticker}: {response.status_code}")
             return None
+        
+        # Fetch historical dividends from Polygon.io
+    def get_polygon_dividends(self, ticker, order="asc", limit=10):
+        url = "https://api.polygon.io/v3/reference/dividends"
+        response = requests.get(url, params={
+            'ticker': ticker,
+            'order': order,
+            'limit': limit,
+            'apiKey': self.polygon_key
+        })
 
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error fetching Polygon dividends for ticker {ticker}: {response.status_code}")
+            return None
+
+        
+    # Fetch historical stock splits from Polygon.io
+    def get_polygon_stock_splits(self, ticker, order="asc", reverse_split=False, limit=10):
+        url = "https://api.polygon.io/v3/reference/splits"
+        response = requests.get(url, params={
+            'ticker': ticker,
+            'order': order,
+            'reverse_split': reverse_split,
+            'limit': limit,
+            'apiKey': self.polygon_key
+        })
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error fetching Polygon stock splits for ticker {ticker}: {response.status_code}")
+            return None
 
     # Fetch historical stock prices from MarketStack
     def get_marketstack_eod(self, ticker, start_date, end_date):
@@ -62,17 +95,22 @@ class StockApi:
         else:
             print(f"Error fetching Polygon data for ticker {ticker}: {response.status_code}")
             return None
-
-    # Fetch historical stock prices from Polygon.io
-    def get_polygon_eod(self, ticker, start_date, end_date):
-        url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/day/{start_date}/{end_date}"
-        response = requests.get(url, params={'apiKey': 'ernOzepzqAEFJdCq1gGfkgBAkkSpo1Kw'})
+        
+    # Fetch IPOs from Polygon.io
+    def get_polygon_ipos(self, order="asc", limit=10):
+        url = "https://api.polygon.io/vX/reference/ipos"
+        response = requests.get(url, params={
+            'order': order,
+            'limit': limit,
+            'apiKey': self.polygon_key
+        })
 
         if response.status_code == 200:
             return response.json()
         else:
-            print(f"Error fetching Polygon EOD data for ticker {ticker}: {response.status_code}")
+            print(f"Error fetching Polygon IPOs: {response.status_code}")
             return None
+
 
     # Fetch market news from Polygon.io
     def get_polygon_news(self, ticker):

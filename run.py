@@ -37,6 +37,20 @@ if __name__ == "__main__":
         if polygon_details:
             StockOperations().update_company_with_polygon_details(ticker, polygon_details)
 
+        # Fetch historical dividends from Polygon.io
+        polygon_dividends = stock_api.get_polygon_dividends(ticker)
+        if polygon_dividends:
+            StockOperations().create_dividends(ticker, polygon_dividends)
+
+        # Fetch stock splits from Polygon.io
+        polygon_splits = stock_api.get_polygon_stock_splits(ticker)
+        if polygon_splits:
+            StockOperations().create_stock_splits(ticker, polygon_splits)
+
+        polygon_ipos = stock_api.get_polygon_ipos(order="asc", limit=10)
+        if polygon_ipos:
+            StockOperations().create_ipos(polygon_ipos)
+
         # Fetch market news from Polygon.io
         polygon_news = stock_api.get_polygon_news(ticker)
         if polygon_news:

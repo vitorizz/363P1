@@ -1,5 +1,5 @@
 from peewee import IntegrityError
-from models import Company, StockPrice, AdjustedStockPrice, MarketNews, CompanyFinancials
+from models import Company, StockPrice, AdjustedStockPrice, MarketNews, CompanyFinancials, StockSplit, Dividend, IPO
 from datetime import datetime, timezone
 class StockOperations:
     def create_company(self, company_data):
@@ -150,6 +150,79 @@ class StockOperations:
             except Exception as e:
                 print(f"Error creating stock price: {e}")
 
+    
+    def create_dividends(self, ticker, dividend_data):
+        try:
+            for record in dividend_data.get('results', []):
+                cash_amount = record.get('cash_amount')
+                currency = record.get('currency')
+                declaration_date = record.get('declaration_date')
+                dividend_type = record.get('dividend_type')
+                ex_dividend_date = record.get('ex_dividend_date')
+                frequency = record.get('frequency')
+                pay_date = record.get('pay_date')
+                record_date = record.get('record_date')
+
+                if not (ticker and cash_amount and currency and declaration_date and ex_dividend_date and pay_date and record_date):
+                    print(f"Skipping record due to missing data: {record}")
+                    continue
+
+                company = Company.get_or_none(ticker_symbol=ticker)
+                if not company:
+                    print(f"Skipping record due to missing company for ticker: {ticker}")
+                    continue
+
+                Dividend.get_or_create(
+                    company=company,
+                    defaults={
+                        'cash_amount': cash_amount,
+                        'currency': currency,
+                        'declaration_date': declaration_date,
+                        'dividend_type': dividend_type,
+                        'ex_dividend_date': ex_dividend_date,
+                        'frequency': frequency,
+                        'pay_date': pay_date,
+                        'record_date': record_date
+                    }
+                )
+                print(f"Dividend for {ticker} on {declaration_date} created or updated successfully.")
+        except IntegrityError as e:
+            print(f"Error creating/updating dividend: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+
+    
+    def create_stock_splits(self, ticker, split_data):
+        try:
+            for record in split_data.get('results', []):
+                execution_date = record.get('execution_date')
+                split_from = record.get('split_from')
+                split_to = record.get('split_to')
+
+                if not ticker or not execution_date or not split_from or not split_to:
+                    print(f"Skipping record due to missing data: {record}")
+                    continue
+
+                company = Company.get_or_none(ticker_symbol=ticker)
+                if not company:
+                    print(f"Skipping record due to missing company for ticker: {ticker}")
+                    continue
+
+                StockSplit.get_or_create(
+                    company=company,
+                    execution_date=execution_date,
+                    defaults={
+                        'split_from': split_from,
+                        'split_to': split_to
+                    }
+                )
+                print(f"Stock split for {ticker} on {execution_date} created or updated successfully.")
+        except IntegrityError as e:
+            print(f"Error creating/updating stock split: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+
+
     def update_company_with_polygon_details(self, ticker, polygon_data):
         """Update company details with additional data from Polygon.io."""
         try:
@@ -174,6 +247,60 @@ class StockOperations:
                 print(f"Company {ticker} updated with additional Polygon.io details.")
         except IntegrityError as e:
             print(f"Error updating company {ticker}: {e}")
+
+    def create_ipos(self, ipo_data):
+        """Insert IPO data records."""
+        for record in ipo_data.get('results', []):
+            try:
+                ticker = record.get('ticker')
+                last_updated = record.get('last_updated')
+                issuer_name = record.get('issuer_name')
+                currency_code = record.get('currency_code')
+                us_code = record.get('us_code')
+                isin = record.get('isin')
+                max_shares_offered = record.get('max_shares_offered')
+                lowest_offer_price = record.get('lowest_offer_price')
+                highest_offer_price = record.get('highest_offer_price')
+                total_offer_size = record.get('total_offer_size')
+                primary_exchange = record.get('primary_exchange')
+                shares_outstanding = record.get('shares_outstanding')
+                security_type = record.get('security_type')
+                lot_size = record.get('lot_size')
+                security_description = record.get('security_description')
+                ipo_status = record.get('ipo_status')
+                final_issue_price = record.get('final_issue_price')
+
+                if not issuer_name:
+                    print(f"Skipping record due to missing issuer name: {record}")
+                    continue
+
+                IPO.get_or_create(
+                    ticker=ticker,
+                    last_updated=last_updated,
+                    defaults={
+                        'issuer_name': issuer_name,
+                        'currency_code': currency_code,
+                        'us_code': us_code,
+                        'isin': isin,
+                        'max_shares_offered': max_shares_offered,
+                        'lowest_offer_price': lowest_offer_price,
+                        'highest_offer_price': highest_offer_price,
+                        'total_offer_size': total_offer_size,
+                        'primary_exchange': primary_exchange,
+                        'shares_outstanding': shares_outstanding,
+                        'security_type': security_type,
+                        'lot_size': lot_size,
+                        'security_description': security_description,
+                        'ipo_status': ipo_status,
+                        'final_issue_price': final_issue_price
+                    }
+                )
+                print(f"IPO data for {ticker or issuer_name} created or updated successfully.")
+            except IntegrityError as e:
+                print(f"Error creating/updating IPO data: {e}")
+            except Exception as e:
+                print(f"Unexpected error creating IPO data: {e}")
+
 
     def create_market_news(self, ticker, news_data):
         """Insert market news records."""

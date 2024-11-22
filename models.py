@@ -27,7 +27,7 @@ class Company(BaseModel):
     round_lot = IntegerField(null=True)
 
     class Meta:
-        table_name = 'companies'
+        table_name = 'company'
 
 class CompanyFinancials(BaseModel):
     financial_id = AutoField()
@@ -78,7 +78,7 @@ class StockPrice(BaseModel):
     dividend = DecimalField(max_digits=10, decimal_places=2, null=True)
 
     class Meta:
-        table_name = 'stock_prices'
+        table_name = 'stock_price'
         indexes = (
             (('company', 'price_date'), True),  # Unique constraint on (company, price_date)
         )
@@ -92,7 +92,55 @@ class AdjustedStockPrice(BaseModel):
     adj_volume = BigIntegerField(null=True)
 
     class Meta:
-        table_name = 'adjusted_stock_prices'
+        table_name = 'adjusted_stock_price'
+
+class Dividend(BaseModel):
+    dividend_id = AutoField()
+    company = ForeignKeyField(Company, backref='dividends', on_delete='CASCADE')
+    cash_amount = DecimalField(max_digits=10, decimal_places=2, null=False)
+    currency = CharField(max_length=10, null=False)
+    declaration_date = DateField(null=False)
+    dividend_type = CharField(max_length=10, null=False)
+    ex_dividend_date = DateField(null=False)
+    frequency = IntegerField(null=False)
+    pay_date = DateField(null=False)
+    record_date = DateField(null=False)
+
+    class Meta:
+        table_name = 'dividend'
+
+class StockSplit(BaseModel):
+    split_id = AutoField()
+    company = ForeignKeyField(Company, backref='stock_splits', on_delete='CASCADE')
+    execution_date = DateField(null=False)
+    split_from = IntegerField(null=False)
+    split_to = IntegerField(null=False)
+
+    class Meta:
+        table_name = 'stock_split'
+
+class IPO(BaseModel):
+    ipo_id = AutoField()
+    ticker = CharField(max_length=10, null=True)
+    last_updated = DateField()
+    issuer_name = CharField(max_length=255)
+    currency_code = CharField(max_length=10, null=True)
+    us_code = CharField(max_length=20, null=True)
+    isin = CharField(max_length=20, null=True)
+    max_shares_offered = BigIntegerField(null=True)
+    lowest_offer_price = DecimalField(max_digits=10, decimal_places=2, null=True)
+    highest_offer_price = DecimalField(max_digits=10, decimal_places=2, null=True)
+    total_offer_size = DecimalField(max_digits=20, decimal_places=2, null=True)
+    primary_exchange = CharField(max_length=10, null=True)
+    shares_outstanding = BigIntegerField(null=True)
+    security_type = CharField(max_length=50, null=True)
+    lot_size = IntegerField(null=True)
+    security_description = TextField(null=True)
+    ipo_status = CharField(max_length=50, null=True)
+    final_issue_price = DecimalField(max_digits=10, decimal_places=2, null=True)
+
+    class Meta:
+        table_name = 'ipo'
 
 class MarketNews(BaseModel):
     company = ForeignKeyField(Company, backref='market_news', on_delete='CASCADE')
