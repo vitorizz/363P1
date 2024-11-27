@@ -1,0 +1,24 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5433,
+            "driver": "PostgreSQL",
+            "name": "LearningPostgres",
+            "database": "postgres",
+            "username": "aymanearfaoui",
+            "password": "Aymane123"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "soen363",
+            "database": "postgres",
+            "username": "postgres",
+            "password": "soen363"
+        }
+    ]
+}
