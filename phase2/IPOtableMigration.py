@@ -5,11 +5,11 @@ from bson import Decimal128
 import datetime
 import decimal
 
-# Create a PostgreSQL connection
+# connect to postgres db
 connection = conn.create_connection()
 cursor = connection.cursor()
 
-#Mongo connection
+#mongo  connection
 mongo_client = MongoClient("mongodb://127.0.0.1:27017/")
 mongo_db = mongo_client["soen363"]
 ipo_collection = mongo_db["ipo"]
@@ -19,11 +19,9 @@ try:
     cursor.execute("SELECT * FROM ipo;")
     ipo_rows = cursor.fetchall()
 
-    #  get the column names
     cursor.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'ipo';")
     columns = [col[0] for col in cursor.fetchall()]
 
-    # Transform and insert data into MongoDB
     for row in ipo_rows:
         document = {}
         for i in range(len(columns)):
