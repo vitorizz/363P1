@@ -1,1 +1,3 @@
-SELECT inet_server_addr(), inet_server_port();
+-- 
+
+SELECT * FROM ipo
