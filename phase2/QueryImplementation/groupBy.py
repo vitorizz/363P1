@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 from datetime import datetime
-import pandas as pd
 import time
 
 def groupBy(from_date='2024-11-01', to_date='2024-11-30'):
