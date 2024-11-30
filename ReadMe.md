@@ -53,4 +53,15 @@ python run.py
 - python-dotenv: Loads environment variables from .env files
 - requests: Simplifies API requests
 - urllib3: HTTP client for Python
+- pymongo: Used for interacting with mongodb database
+
+## Phase 2:
+
+### Starting the migration
+- Make sure the required dependencies are installed
+- To migrate the relational database you first need to connect to a mongodb database instance and fill out the credentials in the .env.template file
+- Then you can run the migrate all file which will execute the other migration files. 
+
+### Running the queries
+- Once migration is complete you can run the files in the 'phase2/QueryImplementation' folder
   

@@ -1,4 +1,3 @@
-import psycopg2
 from pymongo import MongoClient
 import connection as conn
 from bson import Decimal128

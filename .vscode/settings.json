@@ -19,6 +19,25 @@
             "database": "postgres",
             "username": "postgres",
             "password": "soen363"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "soen363P2",
+            "database": "postgres2",
+            "username": "postgres"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "soen363_p2",
+            "database": "postgres2",
+            "username": "postgres"
         }
     ]
 }
