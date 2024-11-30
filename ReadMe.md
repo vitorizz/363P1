@@ -64,4 +64,5 @@ python run.py
 
 ### Running the queries
 - Once migration is complete you can run the files in the 'phase2/QueryImplementation' folder
+- Please note that full text search in mongo db is only allowed if there exists a text index index for the collection so we were not able to make a performance comparison.
   
