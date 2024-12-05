@@ -10,6 +10,9 @@
 
 ### Setup Instructions
 
+# Note To Run Phase1:
+- Somewhere along the lines, someone pushed to main without pulling and ruined phase1. There is a branch saved that's called phase1, to run phase1 clone that branch and perform the instrcutions.  
+
 #### #1. **Clone the repository**:
    git clone <-repository-url->
    
@@ -54,6 +57,9 @@ python run.py
 - requests: Simplifies API requests
 - urllib3: HTTP client for Python
 - pymongo: Used for interacting with mongodb database
+
+# Phase 1:
+- Somewhere along the lines, someone pushed to main without pulling and ruined phase1. There is a branch saved that's called phase1, to run phase1 clone that branch and perform the instrcutions.  
 
 ## Phase 2:
 
